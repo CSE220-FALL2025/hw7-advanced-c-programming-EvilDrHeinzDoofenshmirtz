@@ -57,19 +57,19 @@ bst_sf* insert_bst_sf(matrix_sf *mat, bst_sf *root)
         }
         //initialize new node
         node->mat = mat;
-        node->left = NULL;
-        node->right = NULL;
+        node->left_child = NULL;
+        node->right_child = NULL;
         return node;
     }
     //if it's not empty, traverse left subtree if name is alphabetically less
     if (mat->name < root->mat->name) 
     {
-       root->left = insert_bst_sf(mat, root->left);
+       root->left_child = insert_bst_sf(mat, root->left_child);
     } 
     //traverse right subtree if name is alphabetically greater
     else if (mat->name > root->mat->name) 
     {
-        root->right = insert_bst_sf(mat, root->right);
+        root->right_child = insert_bst_sf(mat, root->right_child);
     } 
     //otherwise already exists
     else 
@@ -90,12 +90,12 @@ matrix_sf* find_bst_sf(char name, bst_sf *root)
     //if target name alphabetically less than node name, traverse left subtree 
     if(name < root->mat->name) 
     {
-        return find_bst_sf(name, root->left);
+        return find_bst_sf(name, root->left_child);
     } 
     //if target name alphabetically greater than node name, traverse right subtree
     else if (name > root->mat->name) 
     {
-        return find_bst_sf(name, root->right);
+        return find_bst_sf(name, root->right_child);
     }
     //found target name
     return root->mat;
@@ -110,8 +110,8 @@ void free_bst_sf(bst_sf *root)
         return;
     } 
     //free all nodes in left and right subtrees
-    free_bst_sf(root->left);
-    free_bst_sf(root->right);
+    free_bst_sf(root->left_child);
+    free_bst_sf(root->right_child);
 
     //free matrix and node itself
     free(root->mat);
