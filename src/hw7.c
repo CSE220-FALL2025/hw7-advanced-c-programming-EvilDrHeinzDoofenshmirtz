@@ -304,11 +304,86 @@ matrix_sf* create_matrix_sf(char name, const char *expr)
 
 }
 
-char* infix2postfix_sf(char *infix) {
-    return NULL;
+//maximum capacity for stack
+#define MAX_STACK 100
+
+//order of precedence for operators
+static int prec(char c) 
+{
+    if (c == '\'') return 3; 
+    if (c == '*') return 2;
+    if (c == '+') return 1;
+    return 0;
 }
 
-matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
+
+static int is_alphanumeric(char c)
+{
+    return (c >= 'A' && c <= 'Z') ||   (c >= 'a' && c <= 'z') ||   (c >= '0' && c <= '9');
+}
+
+//convert infix to postfix
+char* infix2postfix_sf(char *infix) 
+{
+    //stores length and allocates memory for postfix
+    int len = strlen(infix);
+    char *postfix = malloc((len + 1) * sizeof(char));
+    if (!postfix) return NULL;
+
+    //fixed stack size with empty stack
+    char stack[MAX_STACK];
+    int top = -1;
+    int k = 0;
+
+    //iterate over each character
+    for (int i = 0; i < len; i++) 
+    {
+        char c = infix[i];
+
+        //append letter or number to postfix string
+        if (is_alphanumeric(c)) 
+        {
+            postfix[k++] = c;
+        } 
+        //push open parantheses
+        else if (c == '(') 
+        {
+            stack[++top] = c;
+        } 
+        //pop operators from the stack and append to postfix until an open parenthesis is found.
+        else if (c == ')') 
+        {
+            while (top >= 0 && stack[top] != '(')
+                postfix[k++] = stack[top--];
+            if (top >= 0) top--; 
+        } 
+        //pop operators from the stack if higher or equal precedence than the current operator
+        else 
+        { 
+            while (top >= 0 && prec(c) <= prec(stack[top]))
+            {
+                //append to postfix
+                postfix[k++] = stack[top--];
+            }
+            stack[++top] = c;
+        }
+    }
+
+    while (top >= 0)
+    {
+        postfix[k++] = stack[top--];
+    }
+
+    postfix[k] = '\0';
+    return postfix;
+}
+
+matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root)
+{
+    if (!expr || !root) 
+    {
+        return NULL;
+    }
     return NULL;
 }
 
